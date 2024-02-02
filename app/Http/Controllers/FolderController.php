@@ -49,7 +49,51 @@ class FolderController extends Controller
             return response()->json(['error' => 'Failed to create folder.'], 500);
         }
     }
+    public function uploadFile($folderId, Request $request)
+    {
+        $folder = Folder::find($folderId);
+
+      
+        $request->validate([
+            'name.*' => 'required|mimes:jpeg,png,pdf,gif,svg,txt|max:2048',
+        ]);
+
+        $uploadedFile = $request->file('name');
+        $name = $uploadedFile->getClientOriginalName();
 
 
-    
+        $filePath = '';
+
+        if ($folder->parent) {
+            $filePath .= $folder->parent->name . '/';
+        }
+
+        $filePath .= $folder->name ? $folder->name . '/' : '';
+        $filePath .= $name;
+
+        // Save the file to storage
+        Storage::disk('public')->put($filePath, file_get_contents($uploadedFile));
+
+
+        $fileSize = $uploadedFile->getSize();
+        $sizeInKB = $fileSize / 1024;
+
+
+        $newFile = File::create([
+            'name' => $name,
+            'size' => $sizeInKB,
+        ]);
+
+        // Associate the file with the folder
+        $folder->files()->save($newFile);
+
+        return response()->json(['message' => 'File uploaded successfully'], 201);
+
+
+
+
+    }
+
+
+
 }
