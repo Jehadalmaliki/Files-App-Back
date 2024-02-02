@@ -15,7 +15,12 @@ class FolderController extends Controller
     {
         $folder = Folder::with(['children', 'files'])->find($id);
 
-        return view('folders.show', compact('folder'));
+        if (!$folder) {
+            return response()->json(['error' => 'Folder not found'], 404);
+        }
+
+        return response()->json(['data' => $folder], 200);
+
     }
 
 
@@ -53,7 +58,7 @@ class FolderController extends Controller
     {
         $folder = Folder::find($folderId);
 
-      
+
         $request->validate([
             'name.*' => 'required|mimes:jpeg,png,pdf,gif,svg,txt|max:2048',
         ]);
@@ -94,6 +99,39 @@ class FolderController extends Controller
 
     }
 
+    public function getContents($id)
+    {
+        $folder = Folder::findOrFail($id);
 
+        return response()->json([
+            'folder' => $folder,
+            'files' => $folder->files,
+            'subfolders' => $folder->subfolders,
+        ]);
+    }
+    public function getFiles($id)
+    {
+        $folder = Folder::with('files')->find($id);
+        $files = $folder->files;
+
+        return view('folders.files', compact('files'));
+    }
+
+    public function delete($id)
+    {
+         $item = Folder::find($id) ?? File::find($id);
+
+        if (!$item) {
+
+            return response()->json(['message' => 'Item not found.']);
+        }
+
+        $parentId = $item->parent_id;
+
+        // Delete the folder or file
+        $item->delete();
+
+        return response()->json(['message' => 'Folder deleted successfully']);
+    }
 
 }
