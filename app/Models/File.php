@@ -11,12 +11,12 @@ class File extends Model
     protected $fillable = [
         'name',
         'size',
-        // 'folder_id',
+        'folder_id',
     ];
 
 
-    // public function folder()
-    // {
-    //     return $this->belongsTo(Folder::class);
-    // }
+    public function folder()
+    {
+        return $this->belongsTo(Folder::class);
+    }
 }
