@@ -25,35 +25,36 @@ class FolderController extends Controller
 
 
     public function create(Request $request)
-    {
-        try {
+{
+    try {
+        $request->validate([
+            'name' => 'required|string',
+            'parent_id' => 'nullable|exists:folders,id',
+        ]);
 
-            $request->validate([
-                'name' => 'required|string',
-                'parent_id' => 'nullable|exists:folders,id',
-            ]);
+        $parentFolderId = $request->parent_id;
+        $parentFolder = $parentFolderId ? Folder::find($parentFolderId) : null;
 
-            $parentFolderId = $request->parent_id;
-            $parentFolder = $parentFolderId ? Folder::find($parentFolderId) : null;
+        $newFolder = new Folder([
+            'name' => $request->name,
+        ]);
 
-            $newFolder = new Folder([
-                'name' => $request->name,
-            ]);
+        $storagePath = $parentFolder ? $parentFolder->name . '/' : ''; // Concatenate parent folder path if exists
+        Storage::disk('public')->makeDirectory($storagePath . $newFolder->name);
 
-            if ($parentFolder) {
-                $parentFolder->children()->save($newFolder);
-            } else {
-                $newFolder->save();
-            }
-            $storagePath = $parentFolder ? $parentFolder->name . '/' : ''; // Concatenate parent folder path if exists
-            Storage::disk('public')->makeDirectory($storagePath . $newFolder->name);
-            return response()->json(['message' => 'Folder created successfully', 'data' => $newFolder], 201);
-        } catch (QueryException $e) {
-            return response()->json(['error' => 'Failed to create folder. Database error.'], 500);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to create folder.'], 500);
+        if ($parentFolder) {
+            $parentFolder->children()->save($newFolder);
+        } else {
+            $newFolder->save();
         }
+
+        return response()->json(['message' => 'Folder created successfully', 'data' => $newFolder], 201);
+    } catch (QueryException $e) {
+        return response()->json(['error' => 'Failed to create folder. Database error.'], 500);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to create folder.'], 500);
     }
+}
     public function uploadFile($folderId, Request $request)
     {
         $folder = Folder::find($folderId);
@@ -77,7 +78,7 @@ class FolderController extends Controller
         $filePath .= $name;
 
         // Save the file to storage
-        Storage::disk('public')->put($filePath, file_get_contents($uploadedFile));
+       Storage::disk('public')->put($filePath, file_get_contents($uploadedFile));
 
 
         $fileSize = $uploadedFile->getSize();
@@ -94,9 +95,6 @@ class FolderController extends Controller
 
         return response()->json(['message' => 'File uploaded successfully'], 201);
 
-
-
-
     }
 
     public function getContents($id)
@@ -112,9 +110,14 @@ class FolderController extends Controller
     public function getFiles($id)
     {
         $folder = Folder::with('files')->find($id);
+
+        if (!$folder) {
+            return response()->json(['error' => 'Folder not found'], 404);
+        }
+
         $files = $folder->files;
 
-        return view('folders.files', compact('files'));
+        return response()->json(['data' => $files], 200);
     }
 
     public function delete($id)
@@ -133,5 +136,28 @@ class FolderController extends Controller
 
         return response()->json(['message' => 'Folder deleted successfully']);
     }
+
+
+public function deleteFile($folderId, $fileId)
+{
+    try {
+        $folder = Folder::findOrFail($folderId);
+        $file = $folder->files()->findOrFail($fileId);
+
+        // Construct the file path based on the folder structure
+        $filePath = $folder->getPath() . '/' . $file->name;
+
+        // Delete the file from storage
+        Storage::disk('public')->delete($filePath);
+
+        // Delete the file from the database
+        $file->delete();
+
+        return response()->json(['message' => 'File deleted successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to delete file.'], 500);
+    }
+}
+
 
 }
