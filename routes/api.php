@@ -29,11 +29,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
     Route::get('/folders/{id}/contents', [FolderController::class, 'getContents']);
-   
+
     Route::delete('/folders/{id}', [FolderController::class, 'delete']);
-
-
-
     Route::post('/folders/create', [FolderController::class, 'create']);
     Route::post('/folders/{folderId}/upload', [FolderController::class, 'uploadFile']);
 
