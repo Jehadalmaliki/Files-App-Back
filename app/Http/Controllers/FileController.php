@@ -19,9 +19,9 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'files.*' => 'required|mimes:jpeg,png,pdf,gif,svg|max:2048',
+            'name.*' => 'required|mimes:jpeg,png,pdf,gif,svg|max:2048',
         ]);
-        
+
           $name=$request->name->getClientOriginalName();
           Storage::disk('public')->put($name,file_get_contents($request->name));
            $fileSize =$request->name->getSize();
