@@ -22,12 +22,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     Route::post('/files/upload', [FileController::class, 'upload']);
     Route::get('/files/show/{id}', [FileController::class, 'show']);
-    Route::get('/files/index', [FileController::class, 'index']);
+    Route::get('/files', [FileController::class, 'index']);
     Route::put('/files/update/{id}', [FileController::class, 'update']);
     Route::delete('/files/delete/{id}', [FileController::class, 'delete']);
 
 
-    
+    Route::get('/folders/{id}/contents', [FolderController::class, 'getContents']);
+    Route::get('/folders/{id}', [FolderController::class, 'show']);
+    Route::post('/folders/{folderId}/files', [FolderController::class, 'uploadFile']);
+    Route::post('/folders/{parentFolderId}/create-folder', [FolderController::class, 'create']);
+    Route::delete('/folders/{id}', [FolderController::class, 'delete']);
 
 
 
