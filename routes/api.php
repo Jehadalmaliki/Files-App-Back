@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\FileFolderController;
 use App\Http\Controllers\FileManagerController;
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +29,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
     Route::get('/folders/{id}/contents', [FolderController::class, 'getContents']);
-    Route::get('/folders/{id}', [FolderController::class, 'show']);
-    Route::post('/folders/{folderId}/files', [FolderController::class, 'uploadFile']);
-    Route::post('/folders/{parentFolderId}/create-folder', [FolderController::class, 'create']);
+   
     Route::delete('/folders/{id}', [FolderController::class, 'delete']);
 
 
 
+    Route::post('/folders/create', [FolderController::class, 'create']);
+    Route::post('/folders/{folderId}/upload', [FolderController::class, 'uploadFile']);
+
+    Route::get('/folders/{id}', [FolderController::class, 'show']);
