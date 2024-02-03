@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Folder extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'parent_id'];
+    protected $fillable = ['name', 'parent_id' ,'path'];
 
     public function children()
     {
@@ -27,7 +27,7 @@ class Folder extends Model
     {
         return $this->hasMany(Folder::class, 'parent_id', 'id');
     }
-    
+
     public function getPath()
     {
         $path = [$this->name];

@@ -72,6 +72,8 @@ class FolderController extends Controller
 
             // Construct the full storage path for the new folder
             $storagePath = $this->buildStoragePath($newFolder);
+            $newFolder->path = $storagePath;
+            
 
             Storage::disk('public')->makeDirectory($storagePath);
 
@@ -83,12 +85,6 @@ class FolderController extends Controller
         }
     }
 
-    /**
-     * Build the storage path for a folder by traversing up to the root.
-     *
-     * @param Folder $folder
-     * @return string
-     */
     private function buildStoragePath($folder)
     {
         $path = $folder->name;
@@ -130,15 +126,14 @@ class FolderController extends Controller
                 'folder_id' => $folder->id, // Assuming you have a 'folder_id' column to associate files with folders
             ]);
 
-            // Associate the file with the folder
             $folder->files()->save($newFile);
 
-            // Add uploaded file data to the response array
             $uploadedFilesData[] = [
                 'name' => $name,
                 'size' => $sizeInKB,
                 'path' => $filePath
             ];
+
         }
 
         // Return a response with the data of all uploaded files
