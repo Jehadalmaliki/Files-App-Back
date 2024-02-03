@@ -73,7 +73,9 @@ class FolderController extends Controller
             // Construct the full storage path for the new folder
             $storagePath = $this->buildStoragePath($newFolder);
             $newFolder->path = $storagePath;
-            
+
+            // Save the path to the database
+            $newFolder->save();
 
             Storage::disk('public')->makeDirectory($storagePath);
 
@@ -84,6 +86,7 @@ class FolderController extends Controller
             return response()->json(['error' => 'Failed to create folder.'], 500);
         }
     }
+
 
     private function buildStoragePath($folder)
     {
