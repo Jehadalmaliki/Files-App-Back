@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::post('/folders/create', [FolderController::class, 'create']);
     Route::post('/folders/{folderId}/upload', [FolderController::class, 'uploadFile']);
     Route::get('/folders/{id}', [FolderController::class, 'show']);
+    Route::get('/folders', [FolderController::class, 'showAll']);
     Route::delete('/folders/{id}', [FolderController::class, 'delete']);
     Route::get('/folders/{id}/files', [FolderController::class, 'getFiles']);
     Route::delete('/folders/{folderId}/files/{fileId}', [FolderController::class, 'deleteFile']);

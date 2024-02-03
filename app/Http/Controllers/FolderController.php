@@ -23,6 +23,12 @@ class FolderController extends Controller
 
     }
 
+    public function showAll()
+    {
+        $folders = Folder::with(['children', 'files'])->get();
+
+        return response()->json(['data' => $folders], 200);
+    }
 
     public function create(Request $request)
 {
