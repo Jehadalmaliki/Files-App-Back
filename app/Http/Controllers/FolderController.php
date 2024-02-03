@@ -31,36 +31,60 @@ class FolderController extends Controller
     }
 
     public function create(Request $request)
-{
-    try {
-        $request->validate([
-            'name' => 'required|string',
-            'parent_id' => 'nullable|exists:folders,id',
-        ]);
+    {
+        try {
+            // Validate request data
+            $request->validate([
+                'name' => 'required|string',
+                'parent_id' => 'nullable|exists:folders,id',
+            ]);
 
-        $parentFolderId = $request->parent_id;
-        $parentFolder = $parentFolderId ? Folder::find($parentFolderId) : null;
+            $parentFolder = null;
 
-        $newFolder = new Folder([
-            'name' => $request->name,
-        ]);
+            // Check for duplicate folder name
+            $newFolderName = $request->name;
+            $baseFolderName = $newFolderName;
 
-        $storagePath = $parentFolder ? $parentFolder->name . '/' : ''; // Concatenate parent folder path if exists
-        Storage::disk('public')->makeDirectory($storagePath . $newFolder->name);
+            // If parent folder is specified, check for duplicates in its children
+            if ($request->parent_id) {
+                $parentFolder = Folder::find($request->parent_id);
+                $existingNames = $parentFolder->children()->pluck('name')->toArray();
+            } else {
+                // Check for duplicates in the root folders
+                $existingNames = Folder::whereNull('parent_id')->pluck('name')->toArray();
+            }
 
-        if ($parentFolder) {
-            $parentFolder->children()->save($newFolder);
-        } else {
-            $newFolder->save();
+            // Append a number to the folder name until it's unique
+            $count = 1;
+            while (in_array($newFolderName, $existingNames)) {
+                $newFolderName = $baseFolderName . '-' . $count;
+                $count++;
+            }
+
+            // Create a new folder
+            $newFolder = new Folder([
+                'name' => $newFolderName,
+            ]);
+
+            // Save the new folder
+            if ($parentFolder) {
+                $parentFolder->children()->save($newFolder);
+            } else {
+                $newFolder->save();
+            }
+
+           
+            $storagePath = $parentFolder ? $parentFolder->name . '/' : '';
+            Storage::disk('public')->makeDirectory($storagePath . $newFolder->name);
+
+            return response()->json(['message' => 'Folder created successfully', 'data' => $newFolder], 201);
+        } catch (QueryException $e) {
+            return response()->json(['error' => 'Failed to create folder. Database error.'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create folder.'], 500);
         }
-
-        return response()->json(['message' => 'Folder created successfully', 'data' => $newFolder], 201);
-    } catch (QueryException $e) {
-        return response()->json(['error' => 'Failed to create folder. Database error.'], 500);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Failed to create folder.'], 500);
     }
-}
+
     public function uploadFile($folderId, Request $request)
     {
         $folder = Folder::find($folderId);
