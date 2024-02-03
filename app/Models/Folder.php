@@ -9,6 +9,11 @@ class Folder extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'parent_id' ,'path'];
+    public function parent()
+    {
+        return $this->belongsTo(Folder::class, 'parent_id');
+    }
+
 
     public function children()
     {
