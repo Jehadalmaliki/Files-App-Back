@@ -28,12 +28,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::delete('/files/delete/{id}', [FileController::class, 'delete']);
 
 
-    Route::get('/folders/{id}/contents', [FolderController::class, 'getContents']);
 
-    Route::post('/folders/create', [FolderController::class, 'create']);
-    Route::post('/folders/{folderId}/upload', [FolderController::class, 'uploadFile']);
-    Route::get('/folders/{id}', [FolderController::class, 'show']);
-    Route::get('/folders', [FolderController::class, 'showAll']);
-    Route::delete('/folders/{id}', [FolderController::class, 'delete']);
-    Route::get('/folders/{id}/files', [FolderController::class, 'getFiles']);
-    Route::delete('/folders/{folderId}/files/{fileId}', [FolderController::class, 'deleteFile']);
+Route::prefix('folders')->group(function () {
+    Route::get('/{id}/contents', [FolderController::class, 'getContents']);
+    Route::post('/create', [FolderController::class, 'create']);
+    Route::post('/{folderId}/upload', [FolderController::class, 'uploadFile']);
+    Route::get('/{id}', [FolderController::class, 'show']);
+    Route::get('/', [FolderController::class, 'showAll']);
+    Route::delete('/{id}', [FolderController::class, 'delete']);
+    Route::get('/{id}/files', [FolderController::class, 'getFiles']);
+    Route::delete('/{folderId}/files/{fileId}', [FolderController::class, 'deleteFile']);
+});
