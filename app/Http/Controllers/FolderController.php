@@ -105,7 +105,7 @@ class FolderController extends Controller
         // Validate request for multiple files
         $request->validate([
             'name' => 'required', // Ensure 'name' is an array of files
-            'name.*' => 'mimes:jpeg,png,pdf,gif,svg,txt|max:2048', // Validate each file
+            'name.*' => 'mimes:jpeg,png,pdf,gif,svg,txt,doc,docx|max:2048', // Validate each file
         ]);
 
         $files = $request->file('name'); // Get all files from the request
