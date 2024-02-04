@@ -1,4 +1,4 @@
-<img width="1279" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٦ ١٠ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/25b05dc0-d7c6-4a76-a701-47ec3bfd903b"># Files App
+# Files App
 
 Files App is a  Laravel API endpoints to handle file and folder management operations such as uploading files, creating folders, listing files/folders in a directory, deleting files/folders.
 And you can intgrated in your Front App
