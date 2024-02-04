@@ -1,4 +1,4 @@
-# Files App
+<img width="1279" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٦ ١٠ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/25b05dc0-d7c6-4a76-a701-47ec3bfd903b"># Files App
 
 Files App is a  Laravel API endpoints to handle file and folder management operations such as uploading files, creating folders, listing files/folders in a directory, deleting files/folders.
 And you can intgrated in your Front App
@@ -91,8 +91,11 @@ Description: Delete a specific file inside a folder.
 Use POSTman To test the api 
 <img width="1283" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٢ ٢٤ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/161d12ca-e6fc-44f1-8c50-06bf81993825">
 
+<img width="1279" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٦ ٤٩ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/46b410d3-7665-4362-906b-e8494f43ec2e">
+
 # This how the folder structure will look 
 <img width="312" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٣ ٢٣ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/26db2b7a-b76c-4eb1-92ca-e296359d8925">
+
 ## Contributing
 Contributions are welcome! If you have suggestions or improvements, feel free to open an issue or submit a pull request.
 
