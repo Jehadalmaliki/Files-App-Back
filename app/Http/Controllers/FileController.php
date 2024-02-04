@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Str;
-
 use Illuminate\Http\Request;
 use App\Models\File;
+use App\Models\Folder;
 
 class FileController extends Controller
 {
@@ -19,24 +19,43 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'files.*' => 'required|mimes:jpeg,png,pdf,gif,svg|max:2048',
+            'name.*' => 'required|mimes:jpeg,png,pdf,gif,svg,txt|max:2048',
+            'folder' => 'nullable|string',
         ]);
-        
-          $name=$request->name->getClientOriginalName();
-          Storage::disk('public')->put($name,file_get_contents($request->name));
-           $fileSize =$request->name->getSize();
+          $folder = $request->folder;
 
-           $sizeInKB = $fileSize / 1024;
+          if ($folder) {
+            Storage::disk('public')->makeDirectory($folder);
+            $name=$request->name->getClientOriginalName();
+            $filePath = $folder ? $folder . '/' . $name : $name;
+            Storage::disk('public')->put($filePath, file_get_contents($request->name));
+            $fileSize =$request->name->getSize();
+            $sizeInKB = $fileSize / 1024;
+            $folderId = $folder ? Folder::firstOrCreate(['name' => $folder])->id : null;
             File::create([
                 'name' =>  $name,
-
                 'size' =>  $sizeInKB,
+                'folder_id' => $folderId,
+
 
             ]);
+            return response()->json(['message' => 'Files uploaded successfully']);
 
+        }
+        else{
+            $name=$request->name->getClientOriginalName();
+            Storage::disk('public')->put($name,file_get_contents($request->name));
+            $fileSize =$request->name->getSize();
 
+             $sizeInKB = $fileSize / 1024;
+              File::create([
+                  'name' =>  $name,
+                  'size' =>  $sizeInKB,
 
-        return response()->json(['message' => 'Files uploaded successfully']);
+              ]);
+          return response()->json(['message' => 'Files uploaded successfully']);
+        }
+
     }
     public function show($id){
         $fills=File::find($id);

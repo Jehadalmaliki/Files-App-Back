@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('folders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('path')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
-            $table->timestamps();
-
             $table->foreign('parent_id')->references('id')->on('folders')->onDelete('cascade');
+            $table->timestamps();
         });
     }
     /**
