@@ -1,7 +1,7 @@
 # Files App
 
-Files App is a simple web application for managing folders and files. It provides a user-friendly interface to organize and upload files within different folders.
-
+Files App is a  Laravel API endpoints to handle file and folder management operations such as uploading files, creating folders, listing files/folders in a directory, deleting files/folders.
+And you can intgrated in your Front App
 ## Features
 
 - Create, view, and delete folders
@@ -46,12 +46,53 @@ The backend API is built with Laravel and provides the necessary endpoints for t
     php artisan serve
 
     
-## API Endpoints
-List your API endpoints here with brief descriptions.
+## Folder Management API Endpoints 
+1.1. File Operations
+ you can find all CRUD router to hold files 
+ 
+2.1 Folder operations
 
+The following Laravel routes are available for managing folders and their contents. These routes are prefixed with /folders:
+
+List Contents of a Folder
+
+Endpoint: GET /folders/{id}/contents
+Description: Retrieve the contents (sub-folders and files) of a specific folder.
+Create a New Folder
+
+Endpoint: POST /folders/create
+Description: Create a new folder.
+Upload File to a Folder
+
+Endpoint: POST /folders/{folderId}/upload
+Description: Upload a file to a specific folder.
+Retrieve Details of a Folder
+
+Endpoint: GET /folders/{id}
+Description: Retrieve details about a specific folder.
+List All Folders
+
+Endpoint: GET /folders/
+Description: List all folders.
+Delete a Folder
+
+Endpoint: DELETE /folders/{id}
+Descripti
+on: Delete a specific folder.
+List Files in a Folder
+
+Endpoint: GET /folders/{id}/files
+Description: List files inside a specific folder.
+Delete a File in a Folder
+
+Endpoint: DELETE /folders/{folderId}/files/{fileId}
+Description: Delete a specific file inside a folder.
 ## Screenshots
-Add your project screenshots here.
+Use POSTman To test the api 
+<img width="1283" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٢ ٢٤ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/161d12ca-e6fc-44f1-8c50-06bf81993825">
 
+# This how the folder structure will look 
+<img width="312" alt="‏لقطة الشاشة ٢٠٢٤-٠٢-٠٤ في ٧ ٠٣ ٢٣ ص" src="https://github.com/Jehadalmaliki/Files-App-Back/assets/49036484/26db2b7a-b76c-4eb1-92ca-e296359d8925">
 ## Contributing
 Contributions are welcome! If you have suggestions or improvements, feel free to open an issue or submit a pull request.
 
